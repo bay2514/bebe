@@ -20,14 +20,14 @@ export default function Home() {
   }
 
   if (loading) {
-    return <div className="text-center py-16 text-pink-500 font-medium animate-pulse">🧸 Lagi nyiapin celengan gemes kita...</div>
+    return <div className="text-center py-16 text-pink-500 font-medium animate-pulse">🐷 Lagi nyiapin celengan babi gemes kita...</div>
   }
 
   return (
     <div className="space-y-6 pb-6">
       {/* Saldo Card Cuteness */}
       <div className="bg-gradient-to-r from-pink-400 via-rose-400 to-amber-300 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden transform hover:scale-[1.01] transition duration-300">
-        <div className="absolute right-[-15px] bottom-[-15px] text-8xl opacity-20 rotate-12">🧸💖</div>
+        <div className="absolute right-[-15px] bottom-[-15px] text-8xl opacity-20 rotate-12">🐷💖</div>
         <div className="flex items-center space-x-2">
           <span className="bg-white/30 text-white text-[11px] px-3 py-1 rounded-full font-bold backdrop-blur-sm">
             ✨ Celengan Berdua

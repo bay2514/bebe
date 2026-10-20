@@ -54,14 +54,14 @@ export default function Deposit() {
         <div className="absolute right-[-10px] top-[-10px] text-7xl opacity-15">🌸🍯</div>
         
         <h2 className="text-lg font-bold text-slate-800 mb-1 flex items-center space-x-2">
-          <span>🧸</span>
+          <span>🐷</span>
           <span>Setor Tabungan Berdua</span>
         </h2>
-        <p className="text-xs text-slate-400 mb-4">Yuk tambah celengan buat masa depan kita berdua ✨</p>
+        <p className="text-xs text-slate-400 mb-4">Yuk tambah celengan babi buat masa depan kita berdua ✨</p>
 
         {success && (
           <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs rounded-2xl font-semibold">
-            🎉 Yeay! Setoran berhasil disimpan ke celengan kita! Mengalihkan... 💖
+            🎉 Yeay! Setoran berhasil disimpan ke celengan babi kita! Mengalihkan... 💖
           </div>
         )}
 
@@ -117,7 +117,7 @@ export default function Deposit() {
             disabled={loading}
             className="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-sm rounded-2xl shadow-lg shadow-pink-500/30 active:scale-98 transition disabled:opacity-50"
           >
-            {loading ? 'Menyimpan celengan... 🧸' : 'Simpan Setoran Sekarang ✨'}
+            {loading ? 'Menyimpan celengan babi... 🐷' : 'Simpan Setoran Sekarang ✨'}
           </button>
         </form>
       </div>

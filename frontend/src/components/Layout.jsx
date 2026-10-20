@@ -66,7 +66,7 @@ export default function Layout() {
             isActive('/profile') ? 'bg-pink-100 text-rose-600 font-bold shadow-sm scale-105' : 'text-slate-400 hover:text-rose-500'
           }`}
         >
-          <span className="text-xl">🧸</span>
+          <span className="text-xl">🐷</span>
           <span className="text-[10px] mt-0.5">Profil</span>
         </Link>
       </nav>
