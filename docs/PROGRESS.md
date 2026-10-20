@@ -6,4 +6,4 @@
 - [x] FASE 3: Frontend fondasi (token desain, komponen, layout, navigasi bawah, login Sanctum, ProtectedRoute, API layer)
 - [x] FASE 4: Beranda, Tambah Saldo, Riwayat
 - [x] FASE 5: Voucher (katalog, Redeem konfirmasi & idempoten, Voucher Saya, Kelola Voucher)
-- [ ] FASE 6: QA (tes, smoke test, aksesibilitas, README panduan)
+- [x] FASE 6: QA (tes, smoke test, aksesibilitas, README panduan)
