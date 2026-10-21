@@ -13,7 +13,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Trust all proxies (untuk Railway, Render, Cloud Run, dll)
+        $middleware->trustProxies(at: '*');
+        
+        // Session configuration
+        $middleware->encryptCookies(
+            except: ['*'] // Encrypt all cookies except specified
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

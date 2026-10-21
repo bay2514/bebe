@@ -1,0 +1,109 @@
+# Panduan Deploy ke Railway
+
+## Prasyarat
+- Akun Railway
+- Akun Supabase (untuk PostgreSQL production)
+- Repository GitHub `bebe` sudah di-merge ke branch yang di-track Railway
+
+---
+
+## Langkah Deploy di Railway
+
+### 1. Buat Project Baru di Railway
+1. Buka [Railway Dashboard](https://railway.app)
+2. Klik **New Project**
+3. Pilih **Deploy from GitHub repo**
+4. Pilih repository `bebe` dan branch `dev`
+
+### 2. Konfigurasi Service
+- **Root Directory**: `backend`
+- **Port**: Railway otomatis menggunakan `$PORT` dari Dockerfile
+
+### 3. Tambahkan Environment Variables di Railway
+Di tab **Variables**, tambahkan:
+
+| Key | Value | Keterangan |
+|-----|-------|------------|
+| `APP_NAME` | `Tabungan Berdua` | Nama aplikasi |
+| `APP_ENV` | `production` | Mode produksi |
+| `APP_DEBUG` | `false` | Matikan debug |
+| `APP_KEY` | *(generate baru)* | Key Laravel |
+| `APP_URL` | `https://bebe-xxxx.up.railway.app` | URL Railway (setelah deploy) |
+| `LOG_CHANNEL` | `stderr` | Log ke stdout Railway |
+| `LOG_LEVEL` | `debug` (local) / `info` (prod) | Level log |
+| `DB_CONNECTION` | `pgsql` | PostgreSQL |
+| `DB_URL` | `postgresql://...` | Connection string dari Supabase |
+| `SESSION_DRIVER` | `database` | Database session |
+| `SESSION_SECURE_COOKIE` | `true` | Cookie HTTPS only |
+| `SESSION_SAME_SITE` | `lax` | CSRF protection |
+| `SANCTUM_STATEFUL_DOMAINS` | `https://bebe-xxxx.up.railway.app` | Domain untuk SPA auth |
+
+### 4. Buat Database PostgreSQL di Supabase (Jika Belum)
+1. Buka [supabase.com](https://supabase.com)
+2. **New Project** -> Beri nama `bebe`
+3. Region: **Asia Singapore**
+4. Copy **Connection String (URI)** dari Settings → Database
+
+### 5. Generate APP_KEY Baru
+```bash
+cd backend
+php artisan key:generate --show
+```
+Copy hasil (format: `base64:xxx...`) dan masukkan ke Railway variable `APP_KEY`.
+
+### 6. Deploy
+Klik **Deploy** atau **Manual Deploy** -> **Latest Commit**.
+
+Tunggu proses build selesai (±5-10 menit).
+
+---
+
+## Pasca-Deploy: Setup Akun Pertama
+
+Buka **Terminal Railway** (tab **Deploy** -> **Run command**), lalu jalankan:
+
+```bash
+php artisan couple:create
+```
+
+Masukkan:
+- Nama pasangan 1
+- Nama pasangan 2
+- Password (input tidak terlihat)
+
+Setelah itu, login melalui `/login` dengan kredensial yang baru dibuat.
+
+---
+
+## Checklist Verifikasi
+
+- [ ] Backend bisa diakses di `https://bebe-xxxx.up.railway.app`
+- [ ] Login berhasil dengan akun yang dibuat via `couple:create`
+- [ ] Get `/api/v1/me` mengembalikan data user yang login
+- [ ] Tambah saldo berhasil (POST `/api/v1/transactions`)
+- [ ] Redeem voucher berhasil (POST `/api/v1/vouchers/{id}/redeem`)
+- [ ] Refresh halaman di route dalam (misal `/redemptions`) tidak 404
+- [ ] Data saldo & voucher **bertahan** setelah redeploy
+- [ ] API dipanggil dengan path relatif (`/api/v1/...`) tanpa domain
+
+---
+
+## Peringatan Keamanan
+
+- **JANGAN** commit file `.env` — sudah ada di `.gitignore`
+- **JANGAN** share `APP_KEY` atau `DB_URL` ke siapa pun
+- `APP_DEBUG=false` sudah aktif di produksi
+- Railway tidak menyediakan SQLite yang persisten — **wajib gunakan Supabase PostgreSQL**
+- Jangan gunakan wildcard CORS (`*`) — sudah dikonfigurasi dengan domain Railway
+
+---
+
+## Troubleshooting
+
+| Masalah | Solusi |
+|---------|--------|
+| `SQLSTATE[HY000] [1045]` | Periksa `DB_URL` di Railway (password benar?) |
+| `App key not set` | Set `APP_KEY` di Railway variables |
+| `419 Page Expired` | Set `SANCTUM_STATEFUL_DOMAINS` dengan URL Railway yang benar |
+| `500 Internal Error` | Cek logs di Railway tab **Logs**, pastikan migration berhasil |
+| Frontend tidak load | Pastikan Dockerfile menyalin `public/` dari `frontend/dist` ke `backend/public` |
