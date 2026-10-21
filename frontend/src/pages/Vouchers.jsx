@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import api from '../services/api'
-import { RedeemIcon, PlusIcon, RefreshIcon } from '../components/Icons'
+import { RedeemIcon, PlusIcon, RefreshIcon, MinusIcon } from '../components/Icons'
 
 export default function Vouchers() {
   const [vouchers, setVouchers] = useState([])
   const [loading, setLoading] = useState(true)
   const [redeemingId, setRedeemingId] = useState(null)
+  const [deletingId, setDeletingId] = useState(null)
   const [message, setMessage] = useState(null)
 
   // Form state for creating new voucher
@@ -44,6 +45,23 @@ export default function Vouchers() {
       setMessage({ type: 'error', text: err.response?.data?.message || 'Gagal redeem voucher. Saldo mungkin kurang~' })
     } finally {
       setRedeemingId(null)
+    }
+  }
+
+  const handleDelete = async (id, title) => {
+    if (!window.confirm(`Yakin ingin menghapus voucher "${title}"? 💔`)) return
+
+    setDeletingId(id)
+    setMessage(null)
+
+    try {
+      await api.delete(`/vouchers/${id}`)
+      setMessage({ type: 'success', text: `Voucher "${title}" berhasil dihapus! 🗑️` })
+      fetchVouchers()
+    } catch (err) {
+      setMessage({ type: 'error', text: err.response?.data?.message || 'Gagal menghapus voucher.' })
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -194,20 +212,34 @@ export default function Vouchers() {
                   <p className="text-xs font-bold text-rose-500 mt-1">{formatRupiah(v.price)}</p>
                 </div>
               </div>
-              <button
-                onClick={() => handleRedeem(v.id, v.title)}
-                disabled={redeemingId === v.id}
-                className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 hover:from-pink-600 hover:to-rose-600 transition active:scale-95 disabled:opacity-50 transform hover:scale-105"
-              >
-                <div className="flex items-center space-x-1.5">
-                  {redeemingId === v.id ? 'Menukar...' : (
-                    <>
-                      <RedeemIcon className="w-4 h-4" />
-                      <span>Redeem</span>
-                    </>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => handleDelete(v.id, v.title)}
+                  disabled={deletingId === v.id}
+                  className="p-2.5 bg-rose-50/80 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-2xl border border-rose-200/60 transition active:scale-95 transform hover:-translate-y-0.5 disabled:opacity-50"
+                  title="Hapus voucher"
+                >
+                  {deletingId === v.id ? (
+                    <RefreshIcon className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <MinusIcon className="w-4 h-4" />
                   )}
-                </div>
-              </button>
+                </button>
+                <button
+                  onClick={() => handleRedeem(v.id, v.title)}
+                  disabled={redeemingId === v.id}
+                  className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 hover:from-pink-600 hover:to-rose-600 transition active:scale-95 disabled:opacity-50 transform hover:scale-105"
+                >
+                  <div className="flex items-center space-x-1.5">
+                    {redeemingId === v.id ? 'Menukar...' : (
+                      <>
+                        <RedeemIcon className="w-4 h-4" />
+                        <span>Redeem</span>
+                      </>
+                    )}
+                  </div>
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -25,6 +25,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/vouchers', [VoucherController::class, 'index']);
         Route::post('/vouchers', [VoucherController::class, 'store']);
         Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
+        Route::delete('/vouchers/{id}', [VoucherController::class, 'destroy']);
         Route::post('/vouchers/{id}/redeem', [VoucherController::class, 'redeem']);
 
         // Transaction endpoints

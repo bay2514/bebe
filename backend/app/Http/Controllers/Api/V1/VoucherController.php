@@ -100,6 +100,23 @@ class VoucherController extends Controller
         ], 201);
     }
 
+    public function destroy(int $id): JsonResponse
+    {
+        $voucher = Voucher::findOrFail($id);
+
+        if ($voucher->redemptions()->count() > 0) {
+            return response()->json([
+                'message' => 'Tidak dapat menghapus voucher yang sudah pernah diredeem! 🐷'
+            ], 422);
+        }
+
+        $voucher->update(['is_active' => false]);
+
+        return response()->json([
+            'message' => 'Voucher berhasil dihapus (dinonaktifkan)! 🗑️'
+        ]);
+    }
+
     public function redeem(int $id): JsonResponse
     {
         $user = Auth::user();
