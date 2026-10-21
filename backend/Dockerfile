@@ -31,4 +31,4 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 EXPOSE 80
 
-CMD php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan migrate --force && sed -i "s/80/$PORT/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf && apache2-foreground
+CMD touch database/database.sqlite && php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan migrate --force && sed -i "s/80/$PORT/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf && apache2-foreground
