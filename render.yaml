@@ -11,6 +11,6 @@ services:
       - key: APP_DEBUG
         value: false
       - key: APP_KEY
-        generateValue: true
+        value: base64:s1FZkaUV5h8MQtD26mM7KfPhow86KzH+RLT3abcTCKc=
       - key: DB_CONNECTION
         value: sqlite
