@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     libicu-dev \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_sqlite pdo_mysql zip intl bcmath
+    && docker-php-ext-install pdo pdo_sqlite pdo_mysql pdo_pgsql pgsql zip intl bcmath
 
 RUN a2enmod rewrite
 
