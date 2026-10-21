@@ -27,7 +27,7 @@ done
 if [ "$connected" = false ]; then
     echo "ERROR: Database at ${DB_HOST}:${DB_PORT} not reachable after $max_attempts attempts." >&2
     exit 1
-> fi
+fi
 
 echo "==> Running Laravel optimizations and migrations..."
 php artisan config:clear
