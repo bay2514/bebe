@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function () {
 
         // Voucher endpoints
         Route::get('/vouchers', [VoucherController::class, 'index']);
+        Route::post('/vouchers', [VoucherController::class, 'store']);
         Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
         Route::post('/vouchers/{id}/redeem', [VoucherController::class, 'redeem']);
 

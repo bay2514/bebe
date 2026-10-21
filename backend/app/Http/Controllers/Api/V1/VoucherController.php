@@ -64,6 +64,42 @@ class VoucherController extends Controller
         ]);
     }
 
+    public function store(): JsonResponse
+    {
+        $data = request()->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'required|string|max:50',
+            'emoji' => 'required|string|max:10',
+            'price' => 'required|integer|min:0',
+            'is_recurring' => 'boolean',
+        ]);
+
+        $voucher = Voucher::create([
+            'title' => $data['title'],
+            'description' => $data['description'] ?? '',
+            'category' => $data['category'],
+            'emoji' => $data['emoji'] ?? '🎁',
+            'price' => $data['price'],
+            'is_recurring' => $data['is_recurring'] ?? false,
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'data' => [
+                'id' => $voucher->id,
+                'title' => $voucher->title,
+                'description' => $voucher->description,
+                'category' => $voucher->category,
+                'emoji' => $voucher->emoji,
+                'price' => $voucher->price,
+                'is_recurring' => $voucher->is_recurring,
+                'created_at' => $voucher->created_at->toIso8601String(),
+            ],
+            'message' => 'Voucher berhasil ditambahkan! 🐷'
+        ], 201);
+    }
+
     public function redeem(int $id): JsonResponse
     {
         $user = Auth::user();
