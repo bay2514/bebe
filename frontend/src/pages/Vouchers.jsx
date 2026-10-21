@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import api from '../services/api'
+import { RedeemIcon, PlusIcon, RefreshIcon } from '../components/Icons'
 
 export default function Vouchers() {
   const [vouchers, setVouchers] = useState([])
@@ -95,7 +96,10 @@ export default function Vouchers() {
           onClick={() => setShowAddForm(!showAddForm)}
           className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 active:scale-95 hover:shadow-lg hover:from-pink-600 hover:to-rose-600 transition transform hover:-translate-y-0.5"
         >
-          {showAddForm ? 'Tutup ✕' : '+ Buat Voucher 🌸'}
+          <div className="flex items-center space-x-1.5">
+            <PlusIcon className="w-4 h-4" />
+            <span>{showAddForm ? 'Tutup' : '+ Buat Voucher'}</span>
+          </div>
         </button>
       </div>
 
@@ -168,7 +172,7 @@ export default function Vouchers() {
               disabled={creating}
               className="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-xs rounded-2xl shadow-lg shadow-pink-500/20 active:scale-98 transition disabled:opacity-50"
             >
-              {creating ? 'Menyimpan Voucher... 🐷' : 'Simpan & Pasang Voucher 🎟️'}
+              {creating ? 'Menyimpan Voucher...' : 'Simpan & Pasang Voucher'}
             </button>
           </form>
         </div>
@@ -195,7 +199,14 @@ export default function Vouchers() {
                 disabled={redeemingId === v.id}
                 className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 hover:from-pink-600 hover:to-rose-600 transition active:scale-95 disabled:opacity-50 transform hover:scale-105"
               >
-                {redeemingId === v.id ? 'Menukar...' : 'Redeem 🎟️'}
+                <div className="flex items-center space-x-1.5">
+                  {redeemingId === v.id ? 'Menukar...' : (
+                    <>
+                      <RedeemIcon className="w-4 h-4" />
+                      <span>Redeem</span>
+                    </>
+                  )}
+                </div>
               </button>
             </div>
           ))}

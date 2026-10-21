@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import api from '../services/api'
 import { useNavigate } from 'react-router-dom'
+import { PlusIcon } from '../components/Icons'
 
 export default function Deposit() {
   const [amount, setAmount] = useState('')
@@ -95,7 +96,10 @@ export default function Deposit() {
                   onClick={() => handleQuickAdd(val)}
                   className="py-3 px-3 bg-pink-50/80 hover:bg-pink-100 text-rose-700 text-xs font-bold rounded-2xl border border-pink-200/60 transition active:scale-95 transform hover:-translate-y-0.5 shadow-sm"
                 >
-                  + {formatRupiah(val)}
+                  <div className="flex items-center justify-center space-x-1.5">
+                    <PlusIcon className="w-3.5 h-3.5" />
+                    <span>{formatRupiah(val)}</span>
+                  </div>
                 </button>
               ))}
             </div>
