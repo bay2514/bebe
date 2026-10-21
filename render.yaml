@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: bebe-backend
+    env: docker
+    region: singapore
+    plan: free
+    rootDir: backend
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        value: base64:s1FZkaUV5h8MQtD26mM7KfPhow86KzH+RLT3abcTCKc=
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        sync: false
