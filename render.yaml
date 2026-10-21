@@ -13,4 +13,6 @@ services:
       - key: APP_KEY
         value: base64:s1FZkaUV5h8MQtD26mM7KfPhow86KzH+RLT3abcTCKc=
       - key: DB_CONNECTION
-        value: sqlite
+        value: pgsql
+      - key: DB_URL
+        sync: false
