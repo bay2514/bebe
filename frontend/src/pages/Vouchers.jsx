@@ -12,7 +12,7 @@ export default function Vouchers() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('reward')
-  const [emoji, setEmoji] = useState('🐷')
+  const [emoji, setEmoji] = useState('🌸')
   const [price, setPrice] = useState('')
   const [creating, setCreating] = useState(false)
 
@@ -30,17 +30,17 @@ export default function Vouchers() {
   }, [])
 
   const handleRedeem = async (id, title) => {
-    if (!window.confirm(`Yakin ingin redeem voucher "${title}"?`)) return
+    if (!window.confirm(`Yakin ingin redeem voucher "${title}"? ✨`)) return
 
     setRedeemingId(id)
     setMessage(null)
 
     try {
       await api.post(`/vouchers/${id}/redeem`)
-      setMessage({ type: 'success', text: `Berhasil redeem voucher "${title}"! 💖` })
+      setMessage({ type: 'success', text: `Berhasil redeem voucher "${title}"! 💖 Yeay!` })
       fetchVouchers()
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.message || 'Gagal redeem voucher.' })
+      setMessage({ type: 'error', text: err.response?.data?.message || 'Gagal redeem voucher. Saldo mungkin kurang~' })
     } finally {
       setRedeemingId(null)
     }
@@ -78,14 +78,14 @@ export default function Vouchers() {
   }
 
   if (loading) {
-    return <div className="text-center py-12 text-pink-500 font-medium animate-pulse">🐷 Memuat katalog voucher gemes...</div>
+    return <div className="text-center py-12 text-pink-500 font-medium animate-pulse">🌸 Memuat katalog voucher gemes...</div>
   }
 
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-6 pb-6 animate-fadeIn">
       <div className="flex items-center justify-between px-1">
         <div>
-          <h2 className="text-lg font-bold text-slate-800 flex items-center space-x-2">
+          <h2 className="text-lg font-extrabold text-slate-800 flex items-center space-x-2">
             <span>🎟️</span>
             <span>Katalog Voucher Reward</span>
           </h2>
@@ -93,21 +93,21 @@ export default function Vouchers() {
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 active:scale-95 transition"
+          className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 active:scale-95 hover:shadow-lg hover:from-pink-600 hover:to-rose-600 transition transform hover:-translate-y-0.5"
         >
-          {showAddForm ? 'Tutup ✕' : '+ Buat Voucher 🐷'}
+          {showAddForm ? 'Tutup ✕' : '+ Buat Voucher 🌸'}
         </button>
       </div>
 
       {message && (
-        <div className={`p-3 rounded-2xl text-xs font-semibold border ${message.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-600'}`}>
+        <div className={`p-3.5 rounded-2xl text-xs font-semibold border transition-all animate-bounce ${message.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-600'}`}>
           {message.text}
         </div>
       )}
 
-      {/* Add Voucher Form Modal / Box */}
+      {/* Add Voucher Form Modal / Box with transition */}
       {showAddForm && (
-        <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 space-y-4 animate-fadeIn">
+        <div className="bg-white p-6 rounded-3xl shadow-2xl border border-pink-200 space-y-4 transform transition-all duration-300 animate-fadeIn">
           <h3 className="text-sm font-extrabold text-slate-800 flex items-center space-x-2">
             <span>✨</span>
             <span>Bikin Voucher Hadiah Baru</span>
@@ -122,20 +122,20 @@ export default function Vouchers() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Misal: Pijat Punggung 15 Menit 🌸"
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="w-full px-4 py-3 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Emoji Lucu</label>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Emoji / Simbol</label>
                 <input
                   type="text"
                   required
                   maxLength="5"
                   value={emoji}
                   onChange={(e) => setEmoji(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs text-center focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className="w-full px-4 py-3 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs text-center focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
                 />
               </div>
               <div>
@@ -147,7 +147,7 @@ export default function Vouchers() {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="25000"
-                  className="w-full px-3.5 py-2.5 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className="w-full px-4 py-3 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
                 />
               </div>
             </div>
@@ -159,14 +159,14 @@ export default function Vouchers() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Berlaku kapanpun pas lagi capek~"
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="w-full px-4 py-3 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
               />
             </div>
 
             <button
               type="submit"
               disabled={creating}
-              className="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-xs rounded-2xl shadow-md shadow-pink-500/20 active:scale-98 transition disabled:opacity-50"
+              className="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-xs rounded-2xl shadow-lg shadow-pink-500/20 active:scale-98 transition disabled:opacity-50"
             >
               {creating ? 'Menyimpan Voucher... 🐷' : 'Simpan & Pasang Voucher 🎟️'}
             </button>
@@ -175,15 +175,15 @@ export default function Vouchers() {
       )}
 
       {vouchers.length === 0 ? (
-        <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center text-slate-400 text-xs">
+        <div className="bg-white p-8 rounded-3xl shadow-xl border border-pink-100 text-center text-slate-400 text-xs">
           Belum ada voucher tersedia. Yuk buat voucher pertamamu! 🐷✨
         </div>
       ) : (
         <div className="space-y-3">
           {vouchers.map((v) => (
-            <div key={v.id} className="bg-white p-4 rounded-3xl shadow-lg border border-pink-100 flex items-center justify-between hover:scale-[1.01] transition">
-              <div className="flex items-center space-x-3">
-                <span className="text-3xl bg-pink-50 p-2.5 rounded-2xl">{v.emoji || '🎁'}</span>
+            <div key={v.id} className="bg-white p-4 rounded-3xl shadow-lg border border-pink-100 flex items-center justify-between hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
+              <div className="flex items-center space-x-3.5">
+                <span className="text-3xl bg-pink-50 p-3 rounded-2xl shadow-sm transform hover:rotate-6 transition">{v.emoji || '🎁'}</span>
                 <div>
                   <h3 className="text-xs font-extrabold text-slate-800">{v.title}</h3>
                   <p className="text-[11px] text-slate-400 mt-0.5">{v.description || 'Voucher spesial kesayangan 💖'}</p>
@@ -193,9 +193,9 @@ export default function Vouchers() {
               <button
                 onClick={() => handleRedeem(v.id, v.title)}
                 disabled={redeemingId === v.id}
-                className="px-3.5 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 hover:from-pink-600 hover:to-rose-600 transition active:scale-95 disabled:opacity-50"
+                className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 hover:from-pink-600 hover:to-rose-600 transition active:scale-95 disabled:opacity-50 transform hover:scale-105"
               >
-                {redeemingId === v.id ? 'Tukar...' : 'Redeem 🎟️'}
+                {redeemingId === v.id ? 'Menukar...' : 'Redeem 🎟️'}
               </button>
             </div>
           ))}
