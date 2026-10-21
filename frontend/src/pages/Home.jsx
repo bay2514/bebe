@@ -139,7 +139,7 @@ export default function Home() {
           <span>Tips Menabung Imut Hari Ini</span>
         </h3>
         <p className="text-xs text-slate-600 leading-relaxed">
-          "Sedikit demi sedikit, lama-lama jadi bukit impian kita berdua! Jangan lupa senyum hari ini ya sayang~ 🌸💖"
+          "Sedikit demi sedikit, lama-lama jadi bukit impian kita berdua! Jangan lupa senyum hari ini ya bebe~ 🌸💖"
         </p>
       </div>
     </div>

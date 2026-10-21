@@ -208,7 +208,7 @@ export default function Vouchers() {
                 <span className="text-3xl bg-pink-50 p-3 rounded-2xl shadow-sm transform hover:rotate-6 transition">{v.emoji || '🎁'}</span>
                 <div>
                   <h3 className="text-xs font-extrabold text-slate-800">{v.title}</h3>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{v.description || 'Voucher spesial kesayangan 💖'}</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">{v.description || 'Voucher spesial kesayangan bebe 💖'}</p>
                   <p className="text-xs font-bold text-rose-500 mt-1">{formatRupiah(v.price)}</p>
                 </div>
               </div>
