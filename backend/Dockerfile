@@ -61,15 +61,15 @@ ENV APP_DEBUG=false
 ENV LOG_CHANNEL=stderr
 ENV DB_CONNECTION=pgsql
 
-# Apache
+# Apache document root
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+# Setup entrypoint script
+COPY backend/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 80
 
-# Start command: wait for db, clear cache, run migration, then Apache
-CMD php -r 'for($i=0;$i<30;$i++){echo "Checking database connection to ".getenv("DB_HOST").":".getenv("DB_PORT")." (attempt ".($i+1)."/30)...\n"; try { new PDO("pgsql:host=".getenv("DB_HOST").";port=".getenv("DB_PORT").";dbname=".getenv("DB_DATABASE"), getenv("DB_USERNAME"), getenv("DB_PASSWORD")); exit(0); } catch (Exception $e) { sleep(2); } } fwrite(STDERR, "Database ".getenv("DB_HOST").":".getenv("DB_PORT")." not reachable after 30 attempts.\n"); exit(1);' \
-    && php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:clear && php artisan migrate --force \
-    && sed -i "s/80/\${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf \
-    && apache2-foreground
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
