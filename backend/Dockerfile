@@ -13,7 +13,8 @@ COPY frontend/ ./
 RUN npm run build
 
 # Tahap 2: Build backend Laravel dengan PHP 8.3
-FROM php:8.3-apache
+FROM php:8.4-apache
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Install ekstensi PHP yang dibutuhkan Laravel
 RUN apt-get update && apt-get install -y \
