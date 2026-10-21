@@ -12,7 +12,7 @@ COPY frontend/ ./
 
 RUN npm run build
 
-# Tahap 2: Build backend Laravel dengan PHP 8.3
+# Tahap 2: Build backend Laravel dengan PHP 8.4-apache
 FROM php:8.4-apache
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -51,6 +51,10 @@ RUN mkdir -p /var/www/html/storage/framework/sessions \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
+# Konfigurasi Apache workers untuk menghemat koneksi DB pooler
+RUN echo "StartServers 2\nMinSpareServers 2\nMaxSpareServers 4\nMaxRequestWorkers 8\nMaxConnectionsPerChild 0" > /etc/apache2/conf-available/mpm_prefork.conf \
+    && a2enconf mpm_prefork
+
 # Environment production
 ENV APP_ENV=production
 ENV APP_DEBUG=false
@@ -64,5 +68,8 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 EXPOSE 80
 
-# Start command: clear cache, run migration, then Apache
-CMD php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:clear && php artisan migrate --force && sed -i "s/80/\${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf && apache2-foreground
+# Start command: wait for db, clear cache, run migration, then Apache
+CMD php -r 'for($i=0;$i<30;$i++){echo "Checking database connection to ".getenv("DB_HOST").":".getenv("DB_PORT")." (attempt ".($i+1)."/30)...\n"; try { new PDO("pgsql:host=".getenv("DB_HOST").";port=".getenv("DB_PORT").";dbname=".getenv("DB_DATABASE"), getenv("DB_USERNAME"), getenv("DB_PASSWORD")); exit(0); } catch (Exception $e) { sleep(2); } } fwrite(STDERR, "Database ".getenv("DB_HOST").":".getenv("DB_PORT")." not reachable after 30 attempts.\n"); exit(1);' \
+    && php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:clear && php artisan migrate --force \
+    && sed -i "s/80/\${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf \
+    && apache2-foreground

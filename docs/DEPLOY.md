@@ -30,19 +30,26 @@ Di tab **Variables**, tambahkan:
 | `APP_KEY` | *(generate baru)* | Key Laravel |
 | `APP_URL` | `https://bebe-xxxx.up.railway.app` | URL Railway (setelah deploy) |
 | `LOG_CHANNEL` | `stderr` | Log ke stdout Railway |
-| `LOG_LEVEL` | `debug` (local) / `info` (prod) | Level log |
+| `LOG_LEVEL` | `info` | Level log |
 | `DB_CONNECTION` | `pgsql` | PostgreSQL |
-| `DB_URL` | `postgresql://...` | Connection string dari Supabase |
+| `DB_HOST` | *(Pooler Host)* | **WAJIB** Gunakan Supabase Session Pooler |
+| `DB_PORT` | `5432` | Port Pooler |
+| `DB_DATABASE` | `postgres` | Nama database |
+| `DB_USERNAME` | `postgres.xxx` | Username format `postgres.project-ref` |
+| `DB_PASSWORD` | *(Password)* | Password database |
+| `DB_SSLMODE` | `prefer` | SSL Mode |
 | `SESSION_DRIVER` | `database` | Database session |
 | `SESSION_SECURE_COOKIE` | `true` | Cookie HTTPS only |
 | `SESSION_SAME_SITE` | `lax` | CSRF protection |
-| `SANCTUM_STATEFUL_DOMAINS` | `https://bebe-xxxx.up.railway.app` | Domain untuk SPA auth |
+| `SANCTUM_STATEFUL_DOMAINS` | `bebe-xxxx.up.railway.app` | Domain (tanpa https://) |
 
 ### 4. Buat Database PostgreSQL di Supabase (Jika Belum)
 1. Buka [supabase.com](https://supabase.com)
 2. **New Project** -> Beri nama `bebe`
 3. Region: **Asia Singapore**
-4. Copy **Connection String (URI)** dari Settings → Database
+4. Copy detail koneksi dari **Settings → Database**.
+   - **PENTING**: Gunakan **Session Pooler** (Mode: Session, Port: 5432).
+   - JANGAN gunakan koneksi langsung (Direct Connection) karena Railway sering tidak mendukung IPv6 outbound yang dibutuhkan oleh Supabase direct connection.
 
 ### 5. Generate APP_KEY Baru
 ```bash
@@ -102,7 +109,8 @@ Setelah itu, login melalui `/login` dengan kredensial yang baru dibuat.
 
 | Masalah | Solusi |
 |---------|--------|
-| `SQLSTATE[HY000] [1045]` | Periksa `DB_URL` di Railway (password benar?) |
+| `SQLSTATE[HY000] [1045]` | Periksa `DB_HOST` dan `DB_USERNAME` di Railway. Pastikan pakai **Session Pooler** host. |
+| `Network is unreachable` | Railway tidak mendukung IPv6 outbound. Pastikan gunakan Supabase **Pooler** (IPv4). |
 | `App key not set` | Set `APP_KEY` di Railway variables |
 | `419 Page Expired` | Set `SANCTUM_STATEFUL_DOMAINS` dengan URL Railway yang benar |
 | `500 Internal Error` | Cek logs di Railway tab **Logs**, pastikan migration berhasil |
