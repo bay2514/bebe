@@ -54,7 +54,8 @@ RUN mkdir -p /var/www/html/storage/framework/sessions \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # Konfigurasi Apache workers untuk menghemat koneksi DB pooler
-RUN echo "StartServers 2\nMinSpareServers 2\nMaxSpareServers 4\nMaxRequestWorkers 8\nMaxConnectionsPerChild 0" > /etc/apache2/conf-available/mpm_prefork.conf \
+RUN a2dismod mpm_event mpm_worker || true \
+    && echo "StartServers 2\nMinSpareServers 2\nMaxSpareServers 4\nMaxRequestWorkers 8\nMaxConnectionsPerChild 0" > /etc/apache2/conf-available/mpm_prefork.conf \
     && a2enconf mpm_prefork
 
 # Environment production
