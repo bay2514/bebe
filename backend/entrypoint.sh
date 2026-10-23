@@ -64,5 +64,12 @@ echo "==> Configuring Apache to listen on port ${PORT}..."
 sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
+echo "==> Testing Apache configuration..."
+if ! apache2ctl configtest; then
+    echo "ERROR: Apache configuration test failed!" >&2
+    apache2ctl configtest 2>&1 >&2
+    exit 1
+fi
+
 echo "==> Starting Apache on port ${PORT}..."
 exec apache2-foreground

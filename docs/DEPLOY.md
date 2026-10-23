@@ -122,7 +122,7 @@ Setelah itu, login melalui `/login` dengan kredensial yang baru dibuat.
 
 | Masalah / Error | Penyebab & Solusi |
 |-----------------|-------------------|
-| **137 Memory Limit / Out of Memory** | Container Railway melebihi batas RAM (biasanya saat npm build atau composer install). Batasi worker Apache (`MaxRequestWorkers 8`) dan pastikan multi-stage build bersih. |
+| **`AH00534: More than one MPM loaded`** | Konflik modul MPM Apache (`mpm_event`, `mpm_worker`, dan `mpm_prefork` aktif bersamaan). Diatasi di Dockerfile dengan menghapus berkas simlink modul MPM lain secara bersih, hanya mengaktifkan `mpm_prefork`, dan menambahkan `apache2ctl configtest` di `entrypoint.sh` sebelum Apache berjalan. |
 | **Migrasi Gagal (`php artisan migrate --force`)** | Koneksi database tidak tersambung atau salah kredensial. Cek log `entrypoint.sh` untuk pesan error detail. |
 | **Port Tidak Cocok / Port 80 vs $PORT** | Railway mengharuskan aplikasi mendengar port `$PORT` (default 8080). `entrypoint.sh` sudah dikonfigurasi otomatis mengganti port di Apache. |
 | **CRLF Line Endings di Skrip Start** | Berkas `entrypoint.sh` berformat Windows (CRLF) menyebabkan shell error (`\r: command not found`). Sudah diamankan dengan `.gitattributes` (`*.sh text eol=lf`). |
