@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libxml2-dev \
     curl \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_sqlite pdo_mysql pdo_pgsql pgsql zip intl bcmath xml \
     && a2enmod rewrite
 
