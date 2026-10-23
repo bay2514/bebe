@@ -105,13 +105,16 @@ Setelah itu, login melalui `/login` dengan kredensial yang baru dibuat.
 
 ---
 
-## Troubleshooting
+## Troubleshooting & Penyebab Crash Umum
 
-| Masalah | Solusi |
-|---------|--------|
+| Masalah / Error | Penyebab & Solusi |
+|-----------------|-------------------|
+| **137 Memory Limit / Out of Memory** | Container Railway melebihi batas RAM (biasanya saat npm build atau composer install). Batasi worker Apache (`MaxRequestWorkers 8`) dan pastikan multi-stage build bersih. |
+| **Migrasi Gagal (`php artisan migrate --force`)** | Koneksi database tidak tersambung atau salah kredensial. Cek log `entrypoint.sh` untuk pesan error detail. |
+| **Port Tidak Cocok / Port 80 vs $PORT** | Railway mengharuskan aplikasi mendengar port `$PORT` (default 8080). `entrypoint.sh` sudah dikonfigurasi otomatis mengganti port di Apache. |
+| **CRLF Line Endings di Skrip Start** | Berkas `entrypoint.sh` berformat Windows (CRLF) menyebabkan shell error (`\r: command not found`). Sudah diamankan dengan `.gitattributes` (`*.sh text eol=lf`). |
 | `SQLSTATE[HY000] [1045]` | Periksa `DB_HOST` dan `DB_USERNAME` di Railway. Pastikan pakai **Session Pooler** host. |
 | `Network is unreachable` | Railway tidak mendukung IPv6 outbound. Pastikan gunakan Supabase **Pooler** (IPv4). |
 | `App key not set` | Set `APP_KEY` di Railway variables |
 | `419 Page Expired` | Set `SANCTUM_STATEFUL_DOMAINS` dengan URL Railway yang benar |
 | `500 Internal Error` | Cek logs di Railway tab **Logs**, pastikan migration berhasil |
-| Frontend tidak load | Pastikan Dockerfile menyalin `public/` dari `frontend/dist` ke `backend/public` |
