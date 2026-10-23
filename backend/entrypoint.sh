@@ -22,12 +22,16 @@ max_attempts=30
 connected=false
 
 while [ $attempt -le $max_attempts ]; do
-    if php -r "try { new PDO('pgsql:host=${DB_HOST};port=${DB_PORT};dbname=${DB_DATABASE}', '${DB_USERNAME}', getenv('DB_PASSWORD')); exit(0); } catch (Exception \$e) { exit(1); }"; then
+    db_output=$(php -r "try { new PDO('pgsql:host=${DB_HOST};port=${DB_PORT};dbname=${DB_DATABASE}', '${DB_USERNAME}', getenv('DB_PASSWORD')); exit(0); } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }" 2>&1)
+    if [ $? -eq 0 ]; then
         echo "==> Database is reachable!"
         connected=true
         break
     else
-        echo "Attempt $attempt/$max_attempts: Database not ready yet, waiting 2 seconds..."
+        echo "Attempt $attempt/$max_attempts: Database at ${DB_HOST}:${DB_PORT} not ready yet. Error: ${db_output}"
+        if [[ "$DB_HOST" =~ ^db\..*\.supabase\.co$ ]]; then
+            echo "PETUNJUK: Host berawalan 'db.' dan berakhiran '.supabase.co' adalah koneksi langsung (IPv6). Harap gunakan Supabase Session Pooler (port 5432)."
+        fi
         sleep 2
         attempt=$((attempt + 1))
     fi
@@ -35,6 +39,9 @@ done
 
 if [ "$connected" = false ]; then
     echo "ERROR: Database at ${DB_HOST}:${DB_PORT} not reachable after $max_attempts attempts." >&2
+    if [[ "$DB_HOST" =~ \.supabase\.co$ ]]; then
+        echo "PETUNJUK SUPABASE: Pastikan menggunakan Supabase Session Pooler (port 5432), bukan koneksi langsung." >&2
+    fi
     exit 1
 fi
 

@@ -18,7 +18,16 @@ export default function Login() {
       await login(email, password)
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.message || 'Login gagal. Periksa kembali email dan password ya~ 🧸')
+      const status = err.response?.status
+      if (status === 401 || status === 422) {
+        setError('Email atau password salah')
+      } else if (status === 419) {
+        setError('Sesi kedaluwarsa, muat ulang halaman')
+      } else if (!status || status >= 500) {
+        setError('Server belum bisa dihubungi, coba lagi sebentar')
+      } else {
+        setError(err.response?.data?.message || 'Login gagal. Periksa kembali email dan password ya~ 🧸')
+      }
     } finally {
       setLoading(false)
     }

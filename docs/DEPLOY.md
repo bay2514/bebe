@@ -65,7 +65,20 @@ Tunggu proses build selesai (±5-10 menit).
 
 ---
 
-## Pasca-Deploy: Setup Akun Pertama
+## Opsi Deployment: Netlify vs Single Domain Railway
+
+### 1. Kapan Menggunakan Netlify (Frontend) + Railway (Backend)?
+- **Cocok jika:** Anda ingin frontend di-host di CDN global Netlify (kecepatan akses tinggi, otomatis preview branch, fitur form/serverless jika diperlukan).
+- **Konfigurasi:** 
+  - Frontend dideploy ke Netlify menggunakan `frontend/netlify.toml`.
+  - Netlify melakukan proxying request `/api/*` dan `/sanctum/*` ke URL Railway backend Anda (diatur via `netlify.toml` / redirects).
+  - Pastikan `SANCTUM_STATEFUL_DOMAINS` dan `APP_URL` di Railway sesuai dengan domain Netlify Anda (misal `app.netlify.app`), atau gunakan custom domain.
+
+### 2. Kapan Menggunakan Satu Domain Railway (Monolitik / Static on Backend)?
+- **Cocok jika:** Anda ingin kesederhanaan operasional (1 service di Railway yang melayani Laravel API sekaligus menyajikan file SPA build di `public/index.html`).
+- **Konfigurasi:** 
+  - Frontend di-build saat Docker build (`npm run build`) dan hasilnya disalin ke folder `backend/public/`.
+  - Laravel menangani semua request SPA via wildcard fallback route (`routes/web.php`). Tidak memerlukan konfigurasi Netlify.
 
 Buka **Terminal Railway** (tab **Deploy** -> **Run command**), lalu jalankan:
 

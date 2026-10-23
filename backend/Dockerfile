@@ -26,7 +26,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libxml2-dev \
     curl \
-    && docker-php-ext-install pdo pdo_sqlite pdo_mysql pdo_pgsql pgsql zip intl bcmath xml \
+    && docker-php-ext-install pdo pdo_sqlite pdo_mysql zip intl bcmath xml \
+    && docker-php-ext-install pgsql \
+    && docker-php-ext-install pdo_pgsql \
     && a2enmod rewrite
 
 WORKDIR /var/www/html
