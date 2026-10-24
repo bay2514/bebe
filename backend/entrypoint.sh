@@ -65,8 +65,9 @@ sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
 echo "==> Normalisasi modul MPM Apache di runtime..." >&2
+rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* /etc/apache2/mods-enabled/mpm_winnt.*
 for f in /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf; do
-    if [[ "$f" != *mpm_prefork* ]] && [[ "$f" != *"*"* ]]; then
+    if [[ "$f" != *mpm_prefork* ]] && [[ -e "$f" ]]; then
         echo "  Hapus berkas lama: $(basename "$f")" >&2
         rm -f "$f"
     fi
