@@ -11,6 +11,11 @@ use App\Http\Controllers\Api\V1\RedemptionController;
 Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
+    // Named login route for unauthenticated API requests redirection fallback
+    Route::get('/login', function () {
+        return response()->json(['message' => 'Unauthenticated.'], 401);
+    })->name('login');
+
     Route::middleware(['auth:sanctum'])->group(function () {
         // Auth profile
         Route::get('/me', [AuthController::class, 'me']);
