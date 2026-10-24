@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "php artisan config:clear && php artisan route:clear && php artisan migrate --force && apache2-foreground",
+    "startCommand": "php artisan config:clear && php artisan route:clear && php artisan migrate --force && php artisan db:seed --force && apache2-foreground",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
