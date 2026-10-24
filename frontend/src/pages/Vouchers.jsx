@@ -13,6 +13,7 @@ export default function Vouchers() {
   const [showAddForm, setShowAddForm] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [location, setLocation] = useState('')
   const [category, setCategory] = useState('reward')
   const [emoji, setEmoji] = useState('🌸')
   const [price, setPrice] = useState('')
@@ -32,7 +33,7 @@ export default function Vouchers() {
   }, [])
 
   const handleRedeem = async (id, title) => {
-    if (!window.confirm(`Yakin ingin redeem voucher "${title}"? ✨`)) return
+    if (!window.confirm(`Yakin ingin redeem voucher "${title}"? ✨ Voucher akan otomatis terpakai & hilang dari katalog~`)) return
 
     setRedeemingId(id)
     setMessage(null)
@@ -74,6 +75,7 @@ export default function Vouchers() {
       await api.post('/vouchers', {
         title,
         description,
+        location,
         category,
         emoji,
         price: parseInt(price, 10),
@@ -82,6 +84,7 @@ export default function Vouchers() {
       setMessage({ type: 'success', text: 'Voucher baru berhasil ditambahkan! 🐷✨' })
       setTitle('')
       setDescription('')
+      setLocation('')
       setPrice('')
       setShowAddForm(false)
       fetchVouchers()
@@ -175,6 +178,17 @@ export default function Vouchers() {
             </div>
 
             <div>
+              <label className="block text-xs font-bold text-slate-600 mb-1">Lokasi / Tempat (Opsional)</label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Misal: Cafe Kopi Kenangan / Rumah"
+                className="w-full px-4 py-3 rounded-2xl bg-pink-50/50 border border-pink-200 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
+              />
+            </div>
+
+            <div>
               <label className="block text-xs font-bold text-slate-600 mb-1">Deskripsi Singkat</label>
               <input
                 type="text"
@@ -209,6 +223,12 @@ export default function Vouchers() {
                 <div>
                   <h3 className="text-xs font-extrabold text-slate-800">{v.title}</h3>
                   <p className="text-[11px] text-slate-400 mt-0.5">{v.description || 'Voucher spesial kesayangan bebe 💖'}</p>
+                  {v.location && (
+                    <p className="text-[11px] font-medium text-pink-600 mt-0.5 flex items-center space-x-1">
+                      <span>📍</span>
+                      <span>{v.location}</span>
+                    </p>
+                  )}
                   <p className="text-xs font-bold text-rose-500 mt-1">{formatRupiah(v.price)}</p>
                 </div>
               </div>

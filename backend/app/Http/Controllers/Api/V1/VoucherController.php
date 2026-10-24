@@ -26,7 +26,8 @@ class VoucherController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhere('location', 'like', '%' . $search . '%');
             });
         }
 
@@ -37,6 +38,7 @@ class VoucherController extends Controller
                 'id' => $v->id,
                 'title' => $v->title,
                 'description' => $v->description,
+                'location' => $v->location,
                 'category' => $v->category,
                 'emoji' => $v->emoji,
                 'price' => $v->price,
@@ -55,6 +57,7 @@ class VoucherController extends Controller
                 'id' => $voucher->id,
                 'title' => $voucher->title,
                 'description' => $voucher->description,
+                'location' => $voucher->location,
                 'category' => $voucher->category,
                 'emoji' => $voucher->emoji,
                 'price' => $voucher->price,
@@ -69,6 +72,7 @@ class VoucherController extends Controller
         $data = request()->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
             'category' => 'required|string|max:50',
             'emoji' => 'required|string|max:10',
             'price' => 'required|integer|min:0',
@@ -78,6 +82,7 @@ class VoucherController extends Controller
         $voucher = Voucher::create([
             'title' => $data['title'],
             'description' => $data['description'] ?? '',
+            'location' => $data['location'] ?? null,
             'category' => $data['category'],
             'emoji' => $data['emoji'] ?? '🎁',
             'price' => $data['price'],
@@ -90,6 +95,7 @@ class VoucherController extends Controller
                 'id' => $voucher->id,
                 'title' => $voucher->title,
                 'description' => $voucher->description,
+                'location' => $voucher->location,
                 'category' => $voucher->category,
                 'emoji' => $voucher->emoji,
                 'price' => $voucher->price,
@@ -132,6 +138,9 @@ class VoucherController extends Controller
 
         try {
             $redemption = $service->redeem($wallet, $user->id, $voucher);
+
+            // Voucher disappears from active catalog after redeem
+            $voucher->update(['is_active' => false]);
 
             return response()->json([
                 'data' => [
