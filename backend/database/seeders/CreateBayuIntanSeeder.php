@@ -17,38 +17,32 @@ class CreateBayuIntanSeeder extends Seeder
         $this->command->info('Creating couple accounts: Bayu & Intan...');
 
         // Create Bayu
-        $bayu = User::create([
-            'name' => 'Bayu',
-            'email' => 'bayu@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        $bayu = User::firstOrCreate(
+            ['email' => 'bayu@example.com'],
+            [
+                'name' => 'Bayu',
+                'password' => Hash::make('password'),
+            ]
+        );
 
         // Create Intan
-        $intan = User::create([
-            'name' => 'Intan',
-            'email' => 'intan@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        $intan = User::firstOrCreate(
+            ['email' => 'intan@example.com'],
+            [
+                'name' => 'Intan',
+                'password' => Hash::make('password'),
+            ]
+        );
 
         // Create shared wallet
-        $wallet = Wallet::create([
-            'name' => 'Tabungan Berdua',
-            'balance' => 0,
-        ]);
+        $wallet = Wallet::firstOrCreate(
+            ['name' => 'Tabungan Berdua'],
+            ['balance' => 0]
+        );
 
         // Attach both users to the wallet
-        $wallet->users()->attach([$bayu->id, $intan->id]);
+        $wallet->users()->syncWithoutDetaching([$bayu->id, $intan->id]);
 
         $this->command->info('✅ Accounts created successfully!');
-        $this->command->info('');
-        $this->command->info('--- Bayu ---');
-        $this->command->info('Email: bayu@example.com');
-        $this->command->info('Password: password');
-        $this->command->info('');
-        $this->command->info('--- Intan ---');
-        $this->command->info('Email: intan@example.com');
-        $this->command->info('Password: password');
-        $this->command->info('');
-        $this->command->info('Shared Wallet: Tabungan Berdua');
     }
 }
