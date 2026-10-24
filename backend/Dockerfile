@@ -54,18 +54,12 @@ RUN mkdir -p /var/www/html/storage/framework/sessions \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # Konfigurasi Apache workers untuk menghemat koneksi DB pooler
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf \
-    && rm -f /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf \
-    && a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork rewrite \
-    && echo '<IfModule mpm_prefork_module>' > /etc/apache2/conf-available/mpm_prefork.conf \
-    && echo '    StartServers 2' >> /etc/apache2/conf-available/mpm_prefork.conf \
-    && echo '    MinSpareServers 2' >> /etc/apache2/conf-available/mpm_prefork.conf \
-    && echo '    MaxSpareServers 4' >> /etc/apache2/conf-available/mpm_prefork.conf \
-    && echo '    MaxRequestWorkers 8' >> /etc/apache2/conf-available/mpm_prefork.conf \
-    && echo '    MaxConnectionsPerChild 0' >> /etc/apache2/conf-available/mpm_prefork.conf \
-    && echo '</IfModule>' >> /etc/apache2/conf-available/mpm_prefork.conf \
-    && a2enconf mpm_prefork
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf \
+    && ln -s ../mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && a2enmod rewrite \
+    && printf '<IfModule mpm_prefork_module>\n    StartServers 2\n    MinSpareServers 2\n    MaxSpareServers 4\n    MaxRequestWorkers 8\n    MaxConnectionsPerChild 0\n</IfModule>\n' > /etc/apache2/conf-available/zz-prefork-tuning.conf \
+    && a2enconf zz-prefork-tuning \
+    && apache2ctl configtest
 
 # Environment production
 ENV APP_ENV=production

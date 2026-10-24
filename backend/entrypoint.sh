@@ -71,5 +71,6 @@ if ! apache2ctl configtest; then
     exit 1
 fi
 
+echo "==> Modul MPM aktif:"; ls -l /etc/apache2/mods-enabled | grep -i mpm; apache2ctl configtest || true
 echo "==> Starting Apache on port ${PORT}..."
 exec apache2-foreground
