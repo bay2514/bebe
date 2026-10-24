@@ -8,6 +8,11 @@ Route::get('/up', function () {
     return response()->json(['status' => 'ok']);
 });
 
+// Named login route for unauthenticated API requests redirection fallback
+Route::get('/login', function () {
+    return response()->json(['message' => 'Unauthenticated.'], 401);
+})->name('login');
+
 // GET /health/db - Health check for DB (select 1)
 Route::get('/health/db', function () {
     try {
