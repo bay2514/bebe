@@ -5,16 +5,17 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  VITE_API_BASE_URL = "https://bebe-backend-production.up.railway.app/api/v1"
 
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-RAILWAY-APP.up.railway.app/api/:splat"
+  to = "https://bebe-backend-production.up.railway.app/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/sanctum/*"
-  to = "https://YOUR-RAILWAY-APP.up.railway.app/sanctum/:splat"
+  to = "https://bebe-backend-production.up.railway.app/sanctum/:splat"
   status = 200
   force = true
 
