@@ -122,7 +122,7 @@ Setelah itu, login melalui `/login` dengan kredensial yang baru dibuat.
 
 | Masalah / Error | Penyebab & Solusi |
 |-----------------|-------------------|
-| **`AH00534: More than one MPM loaded`** | Konflik modul MPM Apache (`mpm_event`, `mpm_worker`, dan `mpm_prefork` aktif bersamaan). Diatasi di Dockerfile dengan menghapus berkas simlink modul MPM lain secara bersih, hanya mengaktifkan `mpm_prefork`, dan menambahkan `apache2ctl configtest` di `entrypoint.sh` sebelum Apache berjalan. |
+| **`AH00534: More than one MPM loaded`** | Konflik modul MPM Apache karena `mpm_event` / `mpm_worker` ikut aktif bersama `mpm_prefork` di image dasar PHP-Apache. Diatasi secara deterministik di `Dockerfile` dengan menghapus seluruh simlink `mpm_*.load` dan `mpm_*.conf` di `mods-enabled/`, hanya menautkan `mpm_prefork.load` dan `mpm_prefork.conf`, membuat tuning worker khusus di `conf-available/zz-prefork-tuning.conf`, dan memverifikasinya via `apache2ctl configtest` saat build time serta di `entrypoint.sh` sebelum Apache start. |
 | **Migrasi Gagal (`php artisan migrate --force`)** | Koneksi database tidak tersambung atau salah kredensial. Cek log `entrypoint.sh` untuk pesan error detail. |
 | **Port Tidak Cocok / Port 80 vs $PORT** | Railway mengharuskan aplikasi mendengar port `$PORT` (default 8080). `entrypoint.sh` sudah dikonfigurasi otomatis mengganti port di Apache. |
 | **CRLF Line Endings di Skrip Start** | Berkas `entrypoint.sh` berformat Windows (CRLF) menyebabkan shell error (`\r: command not found`). Sudah diamankan dengan `.gitattributes` (`*.sh text eol=lf`). |

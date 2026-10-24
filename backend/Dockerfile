@@ -55,7 +55,8 @@ RUN mkdir -p /var/www/html/storage/framework/sessions \
 
 # Konfigurasi Apache workers untuk menghemat koneksi DB pooler
 RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf \
-    && ln -s ../mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && ln -s /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && ln -s /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
     && a2enmod rewrite \
     && printf '<IfModule mpm_prefork_module>\n    StartServers 2\n    MinSpareServers 2\n    MaxSpareServers 4\n    MaxRequestWorkers 8\n    MaxConnectionsPerChild 0\n</IfModule>\n' > /etc/apache2/conf-available/zz-prefork-tuning.conf \
     && a2enconf zz-prefork-tuning \

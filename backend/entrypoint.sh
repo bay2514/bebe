@@ -64,13 +64,13 @@ echo "==> Configuring Apache to listen on port ${PORT}..."
 sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
-echo "==> Testing Apache configuration..."
+echo "==> Memeriksa modul MPM aktif dan tes konfigurasi Apache..." >&2
+ls -l /etc/apache2/mods-enabled | grep -i mpm >&2 || true
 if ! apache2ctl configtest; then
     echo "ERROR: Apache configuration test failed!" >&2
     apache2ctl configtest 2>&1 >&2
     exit 1
 fi
 
-echo "==> Modul MPM aktif:"; ls -l /etc/apache2/mods-enabled | grep -i mpm; apache2ctl configtest || true
 echo "==> Starting Apache on port ${PORT}..."
 exec apache2-foreground
