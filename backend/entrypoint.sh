@@ -61,8 +61,8 @@ php artisan view:cache || echo "WARNING: view:cache failed, skipping..." >&2
 # Configure Apache port for Railway ($PORT, default 8080)
 PORT="${PORT:-8080}"
 echo "==> Configuring Apache to listen on port ${PORT}..."
-sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
-sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
+sed -i "s/Listen 80/Listen ${PORT}/g" /etc/apache2/ports.conf
+sed -i "s/:80/:${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
 echo "==> Normalisasi modul MPM Apache di runtime..." >&2
 # Hapus semua file simlink mpm_ kecuali mpm_prefork
