@@ -10,25 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class CreateCoupleCommand extends Command
 {
-    protected $signature = 'couple:create
-        {--force-remote : Force run on production environment or non-SQLite database}';
-
+    protected $signature = 'couple:create';
     protected $description = 'Create a couple account with two users and a shared wallet';
 
     public function handle(): int
     {
-        // Protection against accidental production runs
-        $isProduction = $this->laravel->environment('production');
-        $dbConnection = config('database.default');
-
-        if (($isProduction || $dbConnection !== 'sqlite') && !$this->option('force-remote')) {
-            $this->error('PERINGATAN: Command ini ditolak di lingkungan production atau dengan database non-SQLite.');
-            $this->error('Jalankan dengan --force-remote jika yakin ingin menjalankan di lingkungan remote.');
-            $this->error("APP_ENV: " . ($isProduction ? 'production' : $this->laravel->environment()));
-            $this->error("DB_CONNECTION: " . $dbConnection);
-            return self::FAILURE;
-        }
-
         $this->info('Membuat akun pasangan baru (Couple Accounts & Shared Wallet)...');
 
         $walletName = $this->ask('Nama Wallet / Tabungan', 'Tabungan Berdua');

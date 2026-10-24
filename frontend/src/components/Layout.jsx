@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
+import logo from '../assets/logo.jpg'
 
 export default function Layout() {
   const location = useLocation()
@@ -10,9 +11,14 @@ export default function Layout() {
     <div className="min-h-screen bg-pink-50/40 flex flex-col max-w-md mx-auto shadow-2xl relative pb-24 font-sans">
       {/* Top Cute Header */}
       <header className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 text-white p-4 shadow-lg sticky top-0 z-10 flex items-center justify-between rounded-b-3xl">
-        <div className="flex items-center space-x-2">
-          <span className="text-xl animate-bounce">💖</span>
-          <h1 className="text-base font-extrabold tracking-wide">Tabungan Kita Berdua</h1>
+        <div className="flex items-center space-x-2.5">
+          <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white/80 shadow-md">
+            <img src={logo} alt="Logo" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h1 className="text-sm font-extrabold tracking-wide">Tabungan Bebe</h1>
+            <p className="text-[10px] text-pink-100 font-medium">Tabungan Cinta Berdua</p>
+          </div>
         </div>
         <span className="text-xs bg-white/25 px-2.5 py-1 rounded-full font-bold backdrop-blur-sm">v2.0 🌸</span>
       </header>
@@ -23,7 +29,7 @@ export default function Layout() {
       </main>
 
       {/* Bottom Floating Cute Navigation Bar */}
-      <nav className="bg-white/90 backdrop-blur-md border border-pink-100 fixed bottom-3 left-4 right-4 max-w-[calc(28rem-2rem)] mx-auto shadow-2xl rounded-3xl z-20 flex justify-around p-2">
+      <nav className="bg-white/95 backdrop-blur-md border border-pink-100 fixed bottom-3 left-4 right-4 max-w-[calc(28rem-2rem)] mx-auto shadow-2xl rounded-3xl z-20 flex justify-around p-2">
         <Link
           to="/"
           className={`flex flex-col items-center py-1.5 px-3 rounded-2xl transition ${

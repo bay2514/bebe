@@ -118,8 +118,8 @@ export default function Vouchers() {
           className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-2xl shadow-md shadow-pink-500/20 active:scale-95 hover:shadow-lg hover:from-pink-600 hover:to-rose-600 transition transform hover:-translate-y-0.5"
         >
           <div className="flex items-center space-x-1.5">
-            <PlusIcon className="w-4 h-4" />
-            <span>{showAddForm ? 'Tutup' : '+ Buat Voucher'}</span>
+            {showAddForm ? <MinusIcon className="w-4 h-4" /> : <PlusIcon className="w-4 h-4" />}
+            <span>{showAddForm ? 'Tutup' : 'Buat Voucher'}</span>
           </div>
         </button>
       </div>

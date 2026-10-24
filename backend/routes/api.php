@@ -7,11 +7,6 @@ use App\Http\Controllers\Api\V1\VoucherController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use App\Http\Controllers\Api\V1\RedemptionController;
 
-// Named login route for unauthenticated API requests redirection fallback
-Route::get('/login', function () {
-    return response()->json(['message' => 'Unauthenticated.'], 401);
-})->name('login');
-
 // Auth endpoints (public login) - v1
 Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);

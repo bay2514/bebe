@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import logo from '../assets/logo.jpg'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -35,13 +36,15 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-rose-50 to-amber-100 px-4 font-sans">
-      <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-pink-200/60 relative overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-pink-200/60 relative overflow-hidden w-full max-w-sm">
         <div className="absolute right-[-20px] top-[-20px] text-8xl opacity-10">🐷💖</div>
         
-        <div className="text-center mb-8">
-          <span className="text-5xl inline-block animate-bounce">🐷✨</span>
-          <h1 className="text-2xl font-extrabold text-slate-800 mt-3 tracking-tight">Tabungan Kita Berdua</h1>
-          <p className="text-xs text-slate-400 mt-1">Masuk yuk untuk wujudkan impian manis kita bersama 🌸</p>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg border-2 border-pink-300 mb-4 transform hover:scale-105 transition">
+            <img src={logo} alt="Logo" className="w-full h-full object-cover" />
+          </div>
+          <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">Tabungan Bebe</h1>
+          <p className="text-xs text-slate-400 mt-1">Tabungan Cinta Berdua 🌸</p>
         </div>
 
         {error && (
@@ -80,7 +83,7 @@ export default function Login() {
             disabled={loading}
             className="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-sm rounded-2xl shadow-lg shadow-pink-500/30 active:scale-98 transition disabled:opacity-50 mt-2"
           >
-            {loading ? 'Masuk ke celengan babi... 🐷' : 'Masuk Sekarang ✨'}
+            {loading ? 'Masuk... 🐷' : 'Masuk Sekarang ✨'}
           </button>
         </form>
       </div>
