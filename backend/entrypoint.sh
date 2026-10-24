@@ -65,7 +65,7 @@ sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
 echo "==> Normalisasi modul MPM Apache di runtime..." >&2
-a2dismod -f mpm_event mpm_worker mpm_event.load mpm_worker.load 2>/dev/null || true
+rm -f /etc/apache2/mods-available/mpm_event.* /etc/apache2/mods-available/mpm_worker.* /etc/apache2/mods-available/mpm_winnt.*
 rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* /etc/apache2/mods-enabled/mpm_winnt.*
 for f in /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf; do
     if [[ "$f" != *mpm_prefork* ]] && [[ -e "$f" ]]; then
@@ -73,7 +73,6 @@ for f in /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.co
         rm -f "$f"
     fi
 done
-a2enmod -f mpm_prefork || true
 
 # Pastikan tautan prefork ada
 if [[ ! -L /etc/apache2/mods-enabled/mpm_prefork.load ]]; then
