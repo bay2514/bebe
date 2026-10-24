@@ -16,8 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // Trust all proxies (untuk Railway, Render, Cloud Run, dll)
         $middleware->trustProxies(at: '*');
 
-        // Redirect guests to API login endpoint instead of named route 'login'
-        $middleware->redirectGuestsTo('/api/v1/login');
+        // Redirect guests to login URL string via closure
+        $middleware->redirectGuestsTo(fn ($request) => '/api/v1/login');
         
         // Session configuration
         $middleware->encryptCookies(
