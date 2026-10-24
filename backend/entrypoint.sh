@@ -64,13 +64,32 @@ echo "==> Configuring Apache to listen on port ${PORT}..."
 sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
-echo "==> Memeriksa modul MPM aktif dan tes konfigurasi Apache..." >&2
-ls -l /etc/apache2/mods-enabled | grep -i mpm >&2 || true
-if ! apache2ctl configtest; then
-    echo "ERROR: Apache configuration test failed!" >&2
-    apache2ctl configtest 2>&1 >&2
+echo "==> Normalisasi modul MPM Apache di runtime..." >&2
+for f in /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf; do
+    if [[ "$f" != *mpm_prefork* ]] && [[ "$f" != *"*"* ]]; then
+        echo "  Hapus berkas lama: $(basename "$f")" >&2
+        rm -f "$f"
+    fi
+done
+
+# Pastikan tautan prefork ada
+if [[ ! -L /etc/apache2/mods-enabled/mpm_prefork.load ]]; then
+    echo "  Buat tautan mpm_prefork.load" >&2
+    ln -s /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
+fi
+if [[ ! -L /etc/apache2/mods-enabled/mpm_prefork.conf ]]; then
+    echo "  Buat tautan mpm_prefork.conf" >&2
+    ln -s /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+fi
+
+echo "==> Pindaian LoadModule mpm_* di konfigurasi Apache..." >&2
+grep -rn -E "LoadModule +mpm_" /etc/apache2/apache2.conf /etc/apache2/conf-enabled/ /etc/apache2/sites-enabled/ /etc/apache2/mods-enabled/ 2>/dev/null || true
+
+echo "==> Tes konfigurasi Apache..." >&2
+if ! apache2ctl configtest 2>&1; then
+    echo "ERROR: Apache configuration test gagal!" >&2
     exit 1
 fi
 
-echo "==> Starting Apache on port ${PORT}..."
+echo "==> Mulai Apache pada port ${PORT}..." >&2
 exec apache2-foreground
