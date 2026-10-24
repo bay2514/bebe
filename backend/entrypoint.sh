@@ -65,14 +65,11 @@ sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/80/${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
 echo "==> Normalisasi modul MPM Apache di runtime..." >&2
-rm -f /etc/apache2/mods-available/mpm_event.* /etc/apache2/mods-available/mpm_worker.* /etc/apache2/mods-available/mpm_winnt.*
-rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* /etc/apache2/mods-enabled/mpm_winnt.*
-for f in /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf; do
-    if [[ "$f" != *mpm_prefork* ]] && [[ -e "$f" ]]; then
-        echo "  Hapus berkas lama: $(basename "$f")" >&2
-        rm -f "$f"
-    fi
-done
+# Hapus semua file simlink mpm_ kecuali mpm_prefork
+find /etc/apache2/mods-enabled/ -maxdepth 1 -type l -name 'mpm_*.load' ! -name 'mpm_prefork*' -delete
+find /etc/apache2/mods-enabled/ -maxdepth 1 -type l -name 'mpm_*.conf' ! -name 'mpm_prefork*' -delete
+find /etc/apache2/mods-available/ -maxdepth 1 -type f -name 'mpm_*.load' ! -name 'mpm_prefork*' -delete 2>/dev/null || true
+find /etc/apache2/mods-available/ -maxdepth 1 -type f -name 'mpm_*.conf' ! -name 'mpm_prefork*' -delete 2>/dev/null || true
 
 # Pastikan tautan prefork ada
 if [[ ! -L /etc/apache2/mods-enabled/mpm_prefork.load ]]; then
